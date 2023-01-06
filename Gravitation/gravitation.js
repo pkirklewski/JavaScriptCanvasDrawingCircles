@@ -1,12 +1,26 @@
+var canvas = document.querySelector('canvas');
+var c = canvas.getContext("2d");
+initialize();
 
+//console.log(c.localName);
 
-//Create canvas
-// var canvas = document.createElement("canvas");
-// canvas.width = 500;
-// canvas.height = 500;
-// document.body.appendChild(canvas);
+function initialize() {
+	window.addEventListener('resize', resizeCanvas, false);
+	resizeCanvas();
+}
 
+function resizeCanvas() {
+	var wx = (window.innerWidth-30); //* 1.61
+	var wy = (window.innerHeight-30);
+	canvas.width = wx;
+	canvas.height = wy;
+	canvas.x
+	redraw(wx, wy);
+}
+/* 
+function redraw(wx, wy) {
 
+}
 function rcolor(){
   var r = Math.floor(Math.random() * 255);			// RGB r 
 var g = Math.floor(Math.random() * 255);			// RGB g
@@ -16,57 +30,81 @@ var rgba = "rgba(" + r + "," + g + "," + b + "," + a + ")    ";
   return rgba;
 }
 
-//Create circle
-var context = canvas.getContext("2d");
-var circle = {
-  x: 300,
+const circle = {
+  x: 50,
   y: 50,
-  radius: 50,
-  color: rcolor(),
-  velocityY: 0
+  radius: 25,
+  velocity: 0,
+  acceleration: 0.25,
+  draw: function() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+    ctx.fillStyle = 'red';
+    ctx.fill();
+    ctx.closePath();
+  }
 };
 
-//Create gravity
-var gravity = 0.2;
+let isDragging = false;
+let currentX;
+let currentY;
+let initialX;
+let initialY;
+let xOffset = 0;
+let yOffset = 0;
 
-//Draw circle
-function drawCircle() {
-  context.beginPath();
-  context.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2);
-  context.fillStyle = circle.color;
-  context.fill();
-  context.closePath();
-}
+canvas.addEventListener('mousedown', dragStart);
+canvas.addEventListener('mouseup', dragEnd);
+canvas.addEventListener('mousemove', drag);
 
-//Drag circle
-function dragCircle(e) {
-  circle.x = e.clientX;
-  circle.y = e.clientY;
-}
+function dragStart(e) {
+  initialX = e.clientX - xOffset;
+  initialY = e.clientY - yOffset;
 
-//Update circle
-function updateCircle() {
-  //Apply gravity
-  circle.velocityY += gravity;
-  circle.y += circle.velocityY;
-
-  //Stop at bottom
-  if (circle.y + circle.radius > canvas.height) {
-    circle.velocityY = 0;
-    circle.y = canvas.height - circle.radius;
+  if (e.target === circle) {
+    isDragging = true;
   }
-
-  //Draw circle
-  drawCircle();
 }
 
-//Add event listeners
-canvas.addEventListener("mousemove", dragCircle);
+function dragEnd(e) {
+  initialX = currentX;
+  initialY = currentY;
 
-//Animation loop
-function loop() {
-  context.clearRect(0, 0, canvas.width, canvas.height);
-  updateCircle();
-  requestAnimationFrame(loop);
+  isDragging = false;
 }
-loop();
+
+function drag(e) {
+  if (isDragging) {
+    e.preventDefault();
+    currentX = e.clientX - initialX;
+    currentY = e.clientY - initialY;
+
+    xOffset = currentX;
+    yOffset = currentY;
+
+    circle.x = currentX + circle.radius;
+    circle.y = currentY + circle.radius;
+
+    draw();
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  circle.draw();
+  requestAnimationFrame(draw);
+}
+
+draw();
+
+circle.velocity = 0;
+
+function dragEnd(e) {
+  initialX = currentX;
+  initialY = currentY;
+
+  isDragging = false;
+
+  circle.y = canvas.height - circle.radius;
+}
+ */

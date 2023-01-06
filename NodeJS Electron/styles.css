@@ -1,0 +1,16 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background:white;
+}
+ h1 {   
+    color: black;
+    font-size: 4rem;
+    font-family: sans-serif;
+    text-align: center;
+    line-height: 100vh;
+}
